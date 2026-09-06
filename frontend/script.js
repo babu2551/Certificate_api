@@ -5,7 +5,7 @@ const result = document.querySelector('#result');
 const downloadButton = document.querySelector('#download-button');
 const eventSelect = document.querySelector('#event');
 const apiBaseUrl = ['5500', '5501'].includes(window.location.port)
-    ? 'http://127.0.0.1:8000'
+    ? 'https://certificate-api-w6r6.onrender.com'
     : '';
 
 let verifiedEmail = '';
