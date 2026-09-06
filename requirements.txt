@@ -1,6 +1,6 @@
 fastapi
 uvicorn[standard]
-pymongo
+pymongo>=4.11
 python-dotenv
 reportlab
 pypdf
