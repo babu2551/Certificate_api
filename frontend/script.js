@@ -22,7 +22,10 @@ async function loadEvents() {
         eventSelect.disabled = false;
     } catch (error) {
         eventSelect.replaceChildren(new Option(error.message, ''));
-        showMessage(`${error.message} Start the FastAPI server and refresh the page.`, 'error');
+        const message = error instanceof TypeError
+            ? 'Unable to connect to the certificate service. Check the deployed API URL and CORS settings.'
+            : error.message;
+        showMessage(message, 'error');
     }
 }
 
