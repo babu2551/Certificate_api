@@ -4,9 +4,7 @@ const formMessage = document.querySelector('#form-message');
 const result = document.querySelector('#result');
 const downloadButton = document.querySelector('#download-button');
 const eventSelect = document.querySelector('#event');
-const apiBaseUrl = ['5500', '5501'].includes(window.location.port)
-    ? 'https://certificate-api-w6r6.onrender.com'
-    : '';
+const apiBaseUrl = 'https://certificate-api-w6r6.onrender.com'
 
 let verifiedEmail = '';
 let verifiedEvent = '';
