@@ -7,6 +7,7 @@ from reportlab.pdfbase.pdfmetrics import stringWidth
 from reportlab.pdfgen import canvas
 
 TEMPLATE_PATH = Path(__file__).with_name("certificate_formate.png")
+DEFAULT_RANK = "Participant"
 
 
 def _draw_centered_text(pdf: canvas.Canvas, text: str, x: float, y: float, font_size: int) -> None:
@@ -16,14 +17,7 @@ def _draw_centered_text(pdf: canvas.Canvas, text: str, x: float, y: float, font_
     pdf.drawString(x - text_width / 2, y, text)
 
 
-def _draw_checkmark(pdf: canvas.Canvas, x: float, y: float) -> None:
-    pdf.setStrokeColorRGB(0.04, 0.07, 0.14)
-    pdf.setLineWidth(3)
-    pdf.line(x - 9, y, x - 2, y - 8)
-    pdf.line(x - 2, y - 8, x + 11, y + 10)
-
-
-def create_certificate(name: str, rank: str | None = None) -> BytesIO:
+def create_certificate(name: str, rank: str | None = DEFAULT_RANK) -> BytesIO:
     template = ImageReader(str(TEMPLATE_PATH))
     page_width, page_height = template.getSize()
 
@@ -34,11 +28,18 @@ def create_certificate(name: str, rank: str | None = None) -> BytesIO:
     overlay.setFillColorRGB(0.04, 0.07, 0.14)
     name_width = stringWidth(name, "Helvetica-Bold", 34)
     name_font_size = min(34, max(18, 980 / max(name_width, 1) * 34))
-    _draw_centered_text(overlay, name, page_width / 2, 432, int(name_font_size))
-
-    rank_centers = {"first": 594, "second": 879, "third": 1134}
-    if rank in rank_centers:
-        _draw_checkmark(overlay, rank_centers[rank], 349)
+    name_y = 590
+    overlay.setFillColorRGB(1, 1, 1)
+    overlay.rect(
+        page_width / 2 - name_width / 2 - 14,
+        name_y - 5,
+        name_width + 28,
+        42,
+        fill=1,
+        stroke=0,
+    )
+    overlay.setFillColorRGB(0.04, 0.07, 0.14)
+    _draw_centered_text(overlay, name, page_width / 2, name_y, int(name_font_size))
 
     overlay.save()
 

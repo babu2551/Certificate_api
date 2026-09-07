@@ -1,5 +1,3 @@
-from typing import Literal
-
 from pydantic import BaseModel, EmailStr, Field
 
 
@@ -8,7 +6,7 @@ class RegistrationRequest(BaseModel):
     email: EmailStr
     course: str = Field(..., min_length=1, max_length=100)
     event: str = Field(..., min_length=1, max_length=150)
-    rank: Literal["first", "second", "third"] | None = None
+    rank: str = Field(default="Participant", min_length=1, max_length=30)
 
 
 class VerificationRequest(BaseModel):

@@ -6,7 +6,7 @@ from fastapi.staticfiles import StaticFiles
 from fastapi.middleware.cors import CORSMiddleware
 from pymongo.errors import DuplicateKeyError, PyMongoError
 
-from certificate import create_certificate
+from certificate import DEFAULT_RANK, create_certificate
 from database import create_registration_index, registrations
 from models import (
     RegistrationRequest,
@@ -82,7 +82,7 @@ def verify_registration(request: VerificationRequest) -> VerificationResponse:
         eligible=True,
         name=student["name"],
         course=student["course"],
-        rank=student.get("rank"),
+        rank=student.get("rank") or DEFAULT_RANK,
         message="Student is registered and eligible for certificate.",
     )
 
