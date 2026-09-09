@@ -1,6 +1,7 @@
 from io import BytesIO
 from pathlib import Path
 
+from PIL import Image
 from pypdf import PdfReader, PdfWriter
 from reportlab.lib.utils import ImageReader
 from reportlab.pdfbase.pdfmetrics import stringWidth
@@ -8,6 +9,9 @@ from reportlab.pdfgen import canvas
 
 TEMPLATE_PATH = Path(__file__).with_name("certificate_formate.png")
 DEFAULT_RANK = "Participant"
+PAGE_WIDTH = 920
+PAGE_HEIGHT = 680
+MAX_TEMPLATE_SIZE = (2300, 1700)
 
 
 def _draw_centered_text(pdf: canvas.Canvas, text: str, x: float, y: float, font_size: int) -> None:
@@ -18,9 +22,13 @@ def _draw_centered_text(pdf: canvas.Canvas, text: str, x: float, y: float, font_
 
 
 def create_certificate(name: str, rank: str | None = DEFAULT_RANK) -> BytesIO:
-    template = ImageReader(str(TEMPLATE_PATH))
-    template_width, template_height = template.getSize()
-    page_width, page_height = template_width / 10, template_height / 10
+    template_buffer = BytesIO()
+    with Image.open(TEMPLATE_PATH) as template_image:
+        template_image.thumbnail(MAX_TEMPLATE_SIZE, Image.Resampling.LANCZOS)
+        template_image.save(template_buffer, format="PNG", optimize=True)
+    template_buffer.seek(0)
+    template = ImageReader(template_buffer)
+    page_width, page_height = PAGE_WIDTH, PAGE_HEIGHT
 
     overlay_buffer = BytesIO()
     overlay = canvas.Canvas(overlay_buffer, pagesize=(page_width, page_height))

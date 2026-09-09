@@ -4,14 +4,33 @@ const formMessage = document.querySelector('#form-message');
 const result = document.querySelector('#result');
 const downloadButton = document.querySelector('#download-button');
 const eventSelect = document.querySelector('#event');
-const apiBaseUrl = 'https://certificate-api-w6r6.onrender.com'
+const isLocalHost = window.location.protocol === 'file:'
+    || ['localhost', '127.0.0.1'].includes(window.location.hostname);
+const apiBaseUrl = isLocalHost
+    ? 'http://127.0.0.1:8000'
+    : 'https://certificate-api-w6r6.onrender.com';
+
+async function fetchWithRetry(url, options = {}, attempts = 2) {
+    let lastError;
+    for (let attempt = 0; attempt < attempts; attempt += 1) {
+        try {
+            const response = await fetch(url, options);
+            if (response.ok || attempt === attempts - 1) return response;
+        } catch (error) {
+            lastError = error;
+            if (attempt === attempts - 1) throw error;
+        }
+        await new Promise((resolve) => setTimeout(resolve, 1500));
+    }
+    throw lastError || new Error('The certificate service is unavailable.');
+}
 
 let verifiedEmail = '';
 let verifiedEvent = '';
 
 async function loadEvents() {
     try {
-        const response = await fetch(`${apiBaseUrl}/events`);
+        const response = await fetchWithRetry(`${apiBaseUrl}/events`);
         const events = await response.json();
         if (!response.ok || !events.length) {
             throw new Error('No events are available yet.');
@@ -72,7 +91,7 @@ form.addEventListener('submit', async (event) => {
     showMessage('');
 
     try {
-        const response = await fetch(`${apiBaseUrl}/certificate/verify`, {
+        const response = await fetchWithRetry(`${apiBaseUrl}/certificate/verify`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ email, event: eventName }),
@@ -100,20 +119,33 @@ form.addEventListener('submit', async (event) => {
     }
 });
 
-downloadButton.addEventListener('click', () => {
+downloadButton.addEventListener('click', async () => {
     if (!verifiedEmail || !verifiedEvent) return;
 
     downloadButton.disabled = true;
     downloadButton.querySelector('span:last-child').textContent = 'Preparing certificate...';
 
-    const url = `${apiBaseUrl}/certificate/download/${encodeURIComponent(verifiedEmail)}/${encodeURIComponent(verifiedEvent)}`;
-    const link = document.createElement('a');
-    link.href = url;
-    link.download = 'certificate.pdf';
-    document.body.appendChild(link);
-    link.click();
-    link.remove();
+    try {
+        const url = `${apiBaseUrl}/certificate/download/${encodeURIComponent(verifiedEmail)}/${encodeURIComponent(verifiedEvent)}`;
+        const response = await fetchWithRetry(url);
+        if (!response.ok) {
+            const data = await response.json().catch(() => ({}));
+            throw new Error(data.detail || 'Certificate could not be downloaded.');
+        }
 
-    downloadButton.disabled = false;
-    downloadButton.querySelector('span:last-child').textContent = 'Download certificate';
+        const blob = await response.blob();
+        const downloadUrl = URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.href = downloadUrl;
+        link.download = 'certificate.pdf';
+        document.body.appendChild(link);
+        link.click();
+        link.remove();
+        setTimeout(() => URL.revokeObjectURL(downloadUrl), 1000);
+    } catch (error) {
+        showMessage(error.message || 'Unable to download the certificate.', 'error');
+    } finally {
+        downloadButton.disabled = false;
+        downloadButton.querySelector('span:last-child').textContent = 'Download certificate';
+    }
 });

@@ -1,13 +1,13 @@
 from pathlib import Path
 
 from fastapi import FastAPI, HTTPException
-from fastapi.responses import StreamingResponse
+from fastapi.responses import JSONResponse, StreamingResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.middleware.cors import CORSMiddleware
 from pymongo.errors import DuplicateKeyError, PyMongoError
 
 from certificate import DEFAULT_RANK, create_certificate
-from database import create_registration_index, registrations
+from database import check_database_connection, create_registration_index, registrations
 from models import (
     RegistrationRequest,
     RegistrationResponse,
@@ -40,6 +40,22 @@ FRONTEND_DIRECTORY = Path(__file__).with_name("frontend")
 @app.on_event("startup")
 def initialize_database() -> None:
     create_registration_index()
+
+
+@app.get("/health")
+def health_check() -> JSONResponse:
+    try:
+        check_database_connection()
+    except PyMongoError:
+        return JSONResponse(
+            status_code=503,
+            content={"status": "unhealthy", "database": "unavailable"},
+        )
+
+    return JSONResponse(
+        status_code=200,
+        content={"status": "healthy", "database": "available"},
+    )
 
 
 @app.post("/register", response_model=RegistrationResponse, status_code=201)
