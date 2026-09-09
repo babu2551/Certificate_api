@@ -122,7 +122,7 @@ downloadButton.addEventListener('click', async () => {
         document.body.appendChild(link);
         link.click();
         link.remove();
-        URL.revokeObjectURL(downloadUrl);
+        setTimeout(() => URL.revokeObjectURL(downloadUrl), 1000);
     } catch (error) {
         showMessage(error.message || 'Unable to download the certificate.', 'error');
     } finally {
