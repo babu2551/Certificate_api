@@ -408,6 +408,26 @@ dd {
   transform: none;
 }
 
+.primary-button.is-loading .button-arrow,
+.download-button.is-loading > span:first-child {
+  width: 18px;
+  height: 18px;
+  border: 2px solid currentColor;
+  border-right-color: transparent;
+  border-radius: 50%;
+  font-size: 0;
+  animation: spin .7s linear infinite;
+}
+
+.primary-button.is-loading .button-arrow {
+  color: var(--ink);
+  background: var(--lime);
+}
+
+.download-button.is-loading > span:first-child {
+  color: var(--ink);
+}
+
 .site-footer {
   display: flex;
   justify-content: space-between;
@@ -426,6 +446,12 @@ dd {
   to {
     opacity: 1;
     transform: translateY(0);
+  }
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
   }
 }
 

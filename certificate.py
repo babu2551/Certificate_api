@@ -1,4 +1,5 @@
 from io import BytesIO
+from functools import lru_cache
 from pathlib import Path
 
 from PIL import Image
@@ -21,13 +22,22 @@ def _draw_centered_text(pdf: canvas.Canvas, text: str, x: float, y: float, font_
     pdf.drawString(x - text_width / 2, y, text)
 
 
-def create_certificate(name: str, rank: str | None = DEFAULT_RANK) -> BytesIO:
+@lru_cache(maxsize=1)
+def _optimized_template() -> bytes:
     template_buffer = BytesIO()
     with Image.open(TEMPLATE_PATH) as template_image:
         template_image.thumbnail(MAX_TEMPLATE_SIZE, Image.Resampling.LANCZOS)
-        template_image.save(template_buffer, format="PNG", optimize=True)
-    template_buffer.seek(0)
-    template = ImageReader(template_buffer)
+        template_image.save(
+            template_buffer,
+            format="JPEG",
+            quality=88,
+            optimize=True,
+        )
+    return template_buffer.getvalue()
+
+
+def create_certificate(name: str, rank: str | None = DEFAULT_RANK) -> BytesIO:
+    template = ImageReader(BytesIO(_optimized_template()))
     page_width, page_height = PAGE_WIDTH, PAGE_HEIGHT
 
     overlay_buffer = BytesIO()

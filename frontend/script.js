@@ -87,6 +87,7 @@ form.addEventListener('submit', async (event) => {
     }
 
     verifyButton.disabled = true;
+    verifyButton.classList.add('is-loading');
     verifyButton.querySelector('span:first-child').textContent = 'Checking registration...';
     showMessage('');
 
@@ -115,6 +116,7 @@ form.addEventListener('submit', async (event) => {
         showMessage(error.message || 'Unable to verify right now. Please try again.', 'error');
     } finally {
         verifyButton.disabled = false;
+        verifyButton.classList.remove('is-loading');
         verifyButton.querySelector('span:first-child').textContent = 'Verify registration';
     }
 });
@@ -123,6 +125,7 @@ downloadButton.addEventListener('click', async () => {
     if (!verifiedEmail || !verifiedEvent) return;
 
     downloadButton.disabled = true;
+    downloadButton.classList.add('is-loading');
     downloadButton.querySelector('span:last-child').textContent = 'Preparing certificate...';
 
     try {
@@ -146,6 +149,7 @@ downloadButton.addEventListener('click', async () => {
         showMessage(error.message || 'Unable to download the certificate.', 'error');
     } finally {
         downloadButton.disabled = false;
+        downloadButton.classList.remove('is-loading');
         downloadButton.querySelector('span:last-child').textContent = 'Download certificate';
     }
 });
