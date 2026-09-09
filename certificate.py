@@ -19,22 +19,25 @@ def _draw_centered_text(pdf: canvas.Canvas, text: str, x: float, y: float, font_
 
 def create_certificate(name: str, rank: str | None = DEFAULT_RANK) -> BytesIO:
     template = ImageReader(str(TEMPLATE_PATH))
-    page_width, page_height = template.getSize()
+    template_width, template_height = template.getSize()
+    page_width, page_height = template_width / 10, template_height / 10
 
     overlay_buffer = BytesIO()
     overlay = canvas.Canvas(overlay_buffer, pagesize=(page_width, page_height))
     overlay.drawImage(template, 0, 0, width=page_width, height=page_height)
 
     overlay.setFillColorRGB(0.04, 0.07, 0.14)
-    name_width = stringWidth(name, "Helvetica-Bold", 34)
-    name_font_size = min(34, max(18, 980 / max(name_width, 1) * 34))
-    name_y = 590
+    base_font_size = 20
+    name_width = stringWidth(name, "Helvetica-Bold", base_font_size)
+    name_font_size = min(base_font_size, max(18, 980 / max(name_width, 1) * base_font_size))
+    name_width = stringWidth(name, "Helvetica-Bold", name_font_size)
+    name_y = 300
     overlay.setFillColorRGB(1, 1, 1)
     overlay.rect(
-        page_width / 2 - name_width / 2 - 14,
-        name_y - 5,
-        name_width + 28,
-        42,
+        page_width / 2 - name_width / 2 - 8,
+        name_y - 3,
+        name_width + 16,
+        25,
         fill=1,
         stroke=0,
     )
