@@ -100,33 +100,20 @@ form.addEventListener('submit', async (event) => {
     }
 });
 
-downloadButton.addEventListener('click', async () => {
+downloadButton.addEventListener('click', () => {
     if (!verifiedEmail || !verifiedEvent) return;
 
     downloadButton.disabled = true;
     downloadButton.querySelector('span:last-child').textContent = 'Preparing certificate...';
 
-    try {
-        const url = `${apiBaseUrl}/certificate/download/${encodeURIComponent(verifiedEmail)}/${encodeURIComponent(verifiedEvent)}`;
-        const response = await fetch(url);
-        if (!response.ok) {
-            const data = await response.json().catch(() => ({}));
-            throw new Error(data.detail || 'Certificate could not be downloaded.');
-        }
+    const url = `${apiBaseUrl}/certificate/download/${encodeURIComponent(verifiedEmail)}/${encodeURIComponent(verifiedEvent)}`;
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = 'certificate.pdf';
+    document.body.appendChild(link);
+    link.click();
+    link.remove();
 
-        const blob = await response.blob();
-        const downloadUrl = URL.createObjectURL(blob);
-        const link = document.createElement('a');
-        link.href = downloadUrl;
-        link.download = 'certificate.pdf';
-        document.body.appendChild(link);
-        link.click();
-        link.remove();
-        setTimeout(() => URL.revokeObjectURL(downloadUrl), 1000);
-    } catch (error) {
-        showMessage(error.message || 'Unable to download the certificate.', 'error');
-    } finally {
-        downloadButton.disabled = false;
-        downloadButton.querySelector('span:last-child').textContent = 'Download certificate';
-    }
+    downloadButton.disabled = false;
+    downloadButton.querySelector('span:last-child').textContent = 'Download certificate';
 });
