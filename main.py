@@ -196,7 +196,7 @@ def admin_dashboard(_: str = Depends(verify_admin)) -> dict:
         for name in registration_names:
             if name not in known_event_names:
                 event_rows.append({"name": name, "date": "", "description": "", "created_at": None})
-        recent = list(registrations.find({}, {"_id": 0}).sort("created_at", -1).limit(12))
+        recent = list(registrations.find({}, {"_id": 0}).sort("created_at", -1))
     except PyMongoError:
         raise HTTPException(status_code=503, detail="Database is unavailable.")
 
