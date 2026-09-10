@@ -25,3 +25,17 @@ class VerificationResponse(BaseModel):
     course: str | None = None
     rank: str | None = None
     message: str
+
+
+class EventRequest(BaseModel):
+    name: str = Field(..., min_length=1, max_length=150)
+    date: str = Field(default="", max_length=30)
+    description: str = Field(default="", max_length=300)
+
+
+class CertificateRequest(BaseModel):
+    name: str = Field(..., min_length=1, max_length=100)
+    email: EmailStr
+    course: str = Field(..., min_length=1, max_length=100)
+    event: str = Field(..., min_length=1, max_length=150)
+    rank: str = Field(default="Participant", min_length=1, max_length=30)

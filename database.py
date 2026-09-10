@@ -1,4 +1,7 @@
 import os
+import hashlib
+import secrets
+from datetime import datetime, timezone
 
 from dotenv import load_dotenv
 from pymongo import ASCENDING, MongoClient
@@ -20,6 +23,9 @@ client = MongoClient(
 )
 database = client[DATABASE_NAME]
 registrations = database["registrations"]
+events = database["events"]
+certificates = database["certificates"]
+admins = database["admins"]
 
 
 def create_registration_index() -> None:
@@ -29,6 +35,46 @@ def create_registration_index() -> None:
         unique=True,
         name="unique_email_event",
     )
+    events.create_index("name", unique=True, name="unique_event_name")
+    certificates.create_index(
+        [("email", ASCENDING), ("event", ASCENDING)],
+        unique=True,
+        name="unique_certificate_email_event",
+    )
+    admins.create_index("username", unique=True, name="unique_admin_username")
+
+
+def _password_hash(password: str, salt: bytes) -> str:
+    return hashlib.pbkdf2_hmac(
+        "sha256",
+        password.encode("utf-8"),
+        salt,
+        300_000,
+    ).hex()
+
+
+def seed_admin_account(username: str, password: str) -> None:
+    salt = secrets.token_bytes(16)
+    admins.update_one(
+        {"username": username},
+        {
+            "$setOnInsert": {
+                "username": username,
+                "password_hash": _password_hash(password, salt),
+                "password_salt": salt.hex(),
+                "created_at": datetime.now(timezone.utc),
+            }
+        },
+        upsert=True,
+    )
+
+
+def verify_admin_password(username: str, password: str) -> bool:
+    account = admins.find_one({"username": username})
+    if account is None:
+        return False
+    expected_hash = _password_hash(password, bytes.fromhex(account["password_salt"]))
+    return secrets.compare_digest(expected_hash, account["password_hash"])
 
 
 def check_database_connection() -> None:

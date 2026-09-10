@@ -5,4 +5,5 @@ python-dotenv
 reportlab
 pypdf
 email-validator
+python-multipart
 Pillow

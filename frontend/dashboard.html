@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Certificate administration dashboard.">
+    <title>Certify | Dashboard</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="admin.css">
+</head>
+<body data-page="dashboard">
+    <div class="admin-shell">
+        <header class="admin-header">
+            <a class="brand" href="index.html"><span class="brand-mark">C</span><span>CS Club<span class="brand-dot">.</span></span></a>
+            <div class="header-actions"><span class="live-pill"><span></span> Live overview</span><a class="portal-link" href="index.html">Open student portal ↗</a></div>
+        </header>
+        <main id="dashboard-content">
+            <section class="dashboard-heading"><div><p class="eyebrow">Operations / 2026</p><h1>Certificate<br><em>control room.</em></h1><p>Monitor participation, issue certificates, and keep event records current.</p></div><button class="refresh-button" id="refresh-button" type="button">↻ <span>Refresh data</span></button></section>
+            <p id="admin-message" class="admin-message" role="status" aria-live="polite"></p>
+            <section class="stat-grid" aria-label="Overview statistics"><article class="stat-card accent"><span>Students stored</span><strong id="stat-students">—</strong><small>All registrations</small></article><article class="stat-card"><span>Certificates downloaded</span><strong id="stat-downloaded">—</strong><small id="download-rate">— of all students</small></article><article class="stat-card"><span>Waiting to download</span><strong id="stat-pending">—</strong><small>Eligible participants</small></article><article class="stat-card"><span>Active events</span><strong id="stat-events">—</strong><small>Configured and imported</small></article></section>
+            <section class="dashboard-grid"><article class="panel events-panel"><div class="panel-heading"><div><p class="panel-kicker">Calendar</p><h2>Event catalogue</h2></div><button class="text-button" data-open="event-modal" type="button">+ Add event</button></div><div id="events-list" class="events-list"><p class="empty-state">Loading events...</p></div></article><article class="panel upload-panel"><div class="panel-heading"><div><p class="panel-kicker">Batch tools</p><h2>Import registrations</h2></div><span class="file-badge">CSV</span></div><p class="panel-copy">Bring in a prepared student list. Existing email and event pairs are updated instead of duplicated.</p><form id="upload-form"><label class="file-drop" for="csv-file"><span class="file-icon">↑</span><strong id="file-name">Choose a CSV file</strong><small>name, email, course, event</small><input id="csv-file" name="file" type="file" accept=".csv,text/csv" required></label><button class="action-button" type="submit">Import student data <span>↗</span></button></form></article></section>
+            <section class="panel registrations-panel"><div class="panel-heading"><div><p class="panel-kicker">Latest activity</p><h2>Recent registrations</h2></div><span class="table-note">Download status updates automatically</span></div><div class="table-wrap"><table><thead><tr><th>Student</th><th>Event</th><th>Course</th><th>Registered</th><th>Certificate</th><th aria-label="Actions"></th></tr></thead><tbody id="registrations-body"><tr><td colspan="6" class="empty-state">Loading registrations...</td></tr></tbody></table></div></section>
+            <section class="quick-actions"><div><p class="panel-kicker">Creation desk</p><h2>Make something official.</h2><p>Issue a certificate directly to a registered student or create the next event.</p></div><div class="quick-buttons"><button class="action-button" data-open="certificate-modal" type="button">+ New certificate</button><button class="outline-button" data-open="event-modal" type="button">+ New event</button></div></section>
+        </main>
+    </div>
+    <dialog id="event-modal"><form method="dialog" class="modal-form" id="event-form"><button class="close-button" type="submit" aria-label="Close">×</button><p class="panel-kicker">Calendar</p><h2>Add new event</h2><label>Event name<input name="name" maxlength="150" required placeholder="e.g. Annual Tech Symposium"></label><label>Date<input name="date" type="date"></label><label>Description<textarea name="description" maxlength="300" rows="3" placeholder="A short note for your team"></textarea></label><button class="action-button" type="submit">Create event <span>↗</span></button></form></dialog>
+    <dialog id="certificate-modal"><form method="dialog" class="modal-form" id="certificate-form"><button class="close-button" type="submit" aria-label="Close">×</button><p class="panel-kicker">Issuance</p><h2>Add new certificate</h2><label>Student name<input name="name" required placeholder="Student full name"></label><label>Email address<input name="email" type="email" required placeholder="student@example.com"></label><label>Course<input name="course" required placeholder="Computer Science"></label><label>Event<input name="event" required placeholder="Event name"></label><label>Rank<input name="rank" value="Participant" required></label><button class="action-button" type="submit">Issue certificate <span>↗</span></button></form></dialog>
+    <script src="admin.js"></script>
+</body>
+</html>
