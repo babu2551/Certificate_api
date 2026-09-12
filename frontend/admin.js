@@ -109,50 +109,50 @@ async function openSavedDashboard() {
 if (loginForm) loginForm.addEventListener('submit', signIn);
 
 if (isDashboardPage) {
-document.querySelector('#refresh-button').addEventListener('click', loadDashboard);
-document.querySelector('#csv-file').addEventListener('change', (event) => { document.querySelector('#file-name').textContent = event.target.files[0]?.name || 'Choose a CSV file'; });
-document.querySelector('#upload-form').addEventListener('submit', async (event) => {
-    event.preventDefault();
-    const button = event.target.querySelector('button'); button.disabled = true;
-    try { const data = await request('/admin/registrations/upload', { method: 'POST', body: new FormData(event.target) }); showMessage(data.message, 'success'); event.target.reset(); document.querySelector('#file-name').textContent = 'Choose a CSV file'; await loadDashboard(); }
-    catch (error) { showMessage(error.message, 'error'); }
-    finally { button.disabled = false; }
-});
+    document.querySelector('#refresh-button').addEventListener('click', loadDashboard);
+    document.querySelector('#csv-file').addEventListener('change', (event) => { document.querySelector('#file-name').textContent = event.target.files[0]?.name || 'Choose a CSV file'; });
+    document.querySelector('#upload-form').addEventListener('submit', async (event) => {
+        event.preventDefault();
+        const button = event.target.querySelector('button'); button.disabled = true;
+        try { const data = await request('/admin/registrations/upload', { method: 'POST', body: new FormData(event.target) }); showMessage(data.message, 'success'); event.target.reset(); document.querySelector('#file-name').textContent = 'Choose a CSV file'; await loadDashboard(); }
+        catch (error) { showMessage(error.message, 'error'); }
+        finally { button.disabled = false; }
+    });
 
-document.querySelector('#event-form').addEventListener('submit', async (event) => {
-    event.preventDefault();
-    try { const data = await request('/admin/events', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(Object.fromEntries(new FormData(event.target))) }); showMessage(data.message, 'success'); event.target.closest('dialog').close(); event.target.reset(); await loadDashboard(); }
-    catch (error) { showMessage(error.message, 'error'); }
-});
+    document.querySelector('#event-form').addEventListener('submit', async (event) => {
+        event.preventDefault();
+        try { const data = await request('/admin/events', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(Object.fromEntries(new FormData(event.target))) }); showMessage(data.message, 'success'); event.target.closest('dialog').close(); event.target.reset(); await loadDashboard(); }
+        catch (error) { showMessage(error.message, 'error'); }
+    });
 
-document.querySelector('#certificate-form').addEventListener('submit', async (event) => {
-    event.preventDefault();
-    try { const data = await request('/admin/certificates', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(Object.fromEntries(new FormData(event.target))) }); showMessage(data.message, 'success'); event.target.closest('dialog').close(); event.target.reset(); await loadDashboard(); }
-    catch (error) { showMessage(error.message, 'error'); }
-});
+    document.querySelector('#certificate-form').addEventListener('submit', async (event) => {
+        event.preventDefault();
+        try { const data = await request('/admin/certificates', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(Object.fromEntries(new FormData(event.target))) }); showMessage(data.message, 'success'); event.target.closest('dialog').close(); event.target.reset(); await loadDashboard(); }
+        catch (error) { showMessage(error.message, 'error'); }
+    });
 
-document.querySelectorAll('[data-open]').forEach((button) => button.addEventListener('click', () => document.querySelector(`#${button.dataset.open}`).showModal()));
+    document.querySelectorAll('[data-open]').forEach((button) => button.addEventListener('click', () => document.querySelector(`#${button.dataset.open}`).showModal()));
 
-document.querySelector('#events-list').addEventListener('click', async (event) => {
-    const button = event.target.closest('.delete-event');
-    if (!button || !window.confirm(`Delete event "${button.dataset.event}" and all related student records?`)) return;
-    try {
-        const data = await request(`/admin/events/${encodeURIComponent(button.dataset.event)}`, { method: 'DELETE' });
-        showMessage(data.message, 'success');
-        await loadDashboard();
-    } catch (error) { showMessage(error.message, 'error'); }
-});
+    document.querySelector('#events-list').addEventListener('click', async (event) => {
+        const button = event.target.closest('.delete-event');
+        if (!button || !window.confirm(`Delete event "${button.dataset.event}" and all related student records?`)) return;
+        try {
+            const data = await request(`/admin/events/${encodeURIComponent(button.dataset.event)}`, { method: 'DELETE' });
+            showMessage(data.message, 'success');
+            await loadDashboard();
+        } catch (error) { showMessage(error.message, 'error'); }
+    });
 
-document.querySelector('#registrations-body').addEventListener('click', async (event) => {
-    const button = event.target.closest('.delete-student');
-    if (!button || !window.confirm(`Delete ${button.dataset.email}'s registration and certificate?`)) return;
-    try {
-        const path = `/admin/registrations/${encodeURIComponent(button.dataset.email)}/${encodeURIComponent(button.dataset.event)}`;
-        const data = await request(path, { method: 'DELETE' });
-        showMessage(data.message, 'success');
-        await loadDashboard();
-    } catch (error) { showMessage(error.message, 'error'); }
-});
+    document.querySelector('#registrations-body').addEventListener('click', async (event) => {
+        const button = event.target.closest('.delete-student');
+        if (!button || !window.confirm(`Delete ${button.dataset.email}'s registration and certificate?`)) return;
+        try {
+            const path = `/admin/registrations/${encodeURIComponent(button.dataset.email)}/${encodeURIComponent(button.dataset.event)}`;
+            const data = await request(path, { method: 'DELETE' });
+            showMessage(data.message, 'success');
+            await loadDashboard();
+        } catch (error) { showMessage(error.message, 'error'); }
+    });
 }
 
 openSavedDashboard();

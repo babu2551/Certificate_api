@@ -1,14 +1,14 @@
 :root {
-    --ink: #19251f;
-    --muted: #68736d;
-    --line: #d8dfd9;
-    --paper: #f5f7f1;
+    --ink: #101828;
+    --muted: #667085;
+    --line: #d0d5dd;
+    --paper: #f8fafc;
     --surface: #fff;
-    --green: #17633f;
-    --lime: #c8e96b;
-    --coral: #ef836f;
-    --blue: #496f9d;
-    --shadow: 0 18px 45px rgba(25, 37, 31, .08)
+    --green: #155eef;
+    --lime: #155eef;
+    --coral: #155eef;
+    --blue: #155eef;
+    --shadow: 0 18px 45px rgba(16, 24, 40, .08)
 }
 
 * {
@@ -30,7 +30,7 @@ body:before {
     z-index: -1;
     content: "";
     opacity: .4;
-    background-image: radial-gradient(#b8c9bd .8px, transparent .8px);
+    background-image: radial-gradient(#cbd5e1 .8px, transparent .8px);
     background-size: 21px 21px
 }
 
@@ -58,19 +58,26 @@ body:before {
     text-decoration: none
 }
 
+.brand-logo {
+    display: block;
+    width: 58px;
+    height: 58px;
+    object-fit: contain
+}
+
 .brand-mark {
     display: grid;
     width: 31px;
     height: 31px;
     place-items: center;
     color: white;
-    background: var(--green);
+    background: var(--blue);
     border-radius: 50%;
     font-family: Manrope, sans-serif
 }
 
 .brand-dot {
-    color: var(--coral)
+    color: var(--blue)
 }
 
 .header-actions,
@@ -91,9 +98,9 @@ body:before {
 .live-pill span {
     width: 7px;
     height: 7px;
-    background: #65bd79;
+    background: var(--blue);
     border-radius: 50%;
-    box-shadow: 0 0 0 4px #dcefe4
+    box-shadow: 0 0 0 4px #eaf2ff
 }
 
 .portal-link,
@@ -171,7 +178,7 @@ body:before {
 
 .login-card input:focus {
     border-color: var(--green);
-    box-shadow: 0 0 0 3px rgba(23, 99, 63, .12)
+    box-shadow: 0 0 0 3px rgba(21, 94, 239, .14)
 }
 
 .login-card .action-button {
@@ -345,7 +352,7 @@ body:before {
     height: 30px;
     place-items: center;
     color: var(--green);
-    background: #e5f2e9;
+    background: #eaf2ff;
     border-radius: 50%
 }
 
@@ -384,8 +391,8 @@ body:before {
 
 .delete-button:hover {
     color: #fff;
-    background: #bc493c;
-    border-color: #bc493c;
+    background: #b42318;
+    border-color: #b42318;
 }
 
 .event-arrow {
@@ -437,7 +444,7 @@ body:before {
     height: 34px;
     place-items: center;
     color: var(--green);
-    background: #e5f2e9;
+    background: #eaf2ff;
     border-radius: 50%;
     font-size: 18px
 }
@@ -566,7 +573,7 @@ td small {
 }
 
 .status.downloaded i {
-    background: #65bd79
+    background: var(--blue)
 }
 
 .status.pending {
@@ -588,7 +595,7 @@ td:last-child {
     align-items: center;
     margin: 15px 0 50px;
     padding: 30px;
-    background: #e4f0e5
+    background: #eaf2ff
 }
 
 .quick-actions p:last-child {
@@ -627,11 +634,11 @@ td:last-child {
 dialog {
     border: 0;
     border-radius: 7px;
-    box-shadow: 0 25px 80px #19251f33
+    box-shadow: 0 25px 80px rgba(16, 24, 40, .2)
 }
 
 dialog::backdrop {
-    background: #19251f66
+    background: rgba(16, 24, 40, .4)
 }
 
 .close-button {
@@ -762,7 +769,7 @@ dialog::backdrop {
         width: 100%;
         padding: 11px 13px;
         text-align: left;
-        background: #e4f0e5;
+        background: #eaf2ff;
         border-radius: 4px;
     }
 
