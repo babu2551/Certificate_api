@@ -1,8 +1,5 @@
-const frontendDevPorts = ['5500', '5501'];
 const isDashboardPage = document.body.dataset.page === 'dashboard';
-const apiBaseUrl = window.location.protocol === 'file:' || frontendDevPorts.includes(window.location.port)
-    ? 'http://127.0.0.1:8000'
-    : window.location.origin;
+const apiBaseUrl = 'https://certificate-api-w6r6.onrender.com';
 const message = document.querySelector('#admin-message');
 const loginScreen = document.querySelector('#login-screen');
 const dashboardContent = document.querySelector('#dashboard-content');
@@ -30,7 +27,7 @@ async function request(path, options = {}) {
     try {
         response = await fetch(`${apiBaseUrl}${path}`, { ...options, headers });
     } catch (error) {
-        throw new Error(`Cannot reach the certificate API at ${apiBaseUrl}. Start FastAPI on port 8000.`);
+        throw new Error(`Cannot reach the certificate API at ${apiBaseUrl}.`);
     }
     const data = await response.json().catch(() => ({}));
     if (response.status === 401) throw new Error('Your admin ID or password is incorrect.');

@@ -4,11 +4,7 @@ const formMessage = document.querySelector('#form-message');
 const result = document.querySelector('#result');
 const downloadButton = document.querySelector('#download-button');
 const eventSelect = document.querySelector('#event');
-const isLocalHost = window.location.protocol === 'file:'
-    || ['localhost', '127.0.0.1'].includes(window.location.hostname);
-const apiBaseUrl = isLocalHost
-    ? 'http://127.0.0.1:8000'
-    : 'https://certificate-api-w6r6.onrender.com' ;
+const apiBaseUrl = 'https://certificate-api-w6r6.onrender.com';
 
 async function fetchWithRetry(url, options = {}, attempts = 2) {
     let lastError;

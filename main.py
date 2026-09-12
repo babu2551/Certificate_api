@@ -8,7 +8,6 @@ from io import StringIO
 from fastapi import Depends, FastAPI, File, HTTPException, UploadFile, status
 from fastapi.security import HTTPBasic, HTTPBasicCredentials
 from fastapi.responses import FileResponse, JSONResponse, StreamingResponse
-from fastapi.staticfiles import StaticFiles
 from fastapi.middleware.cors import CORSMiddleware
 from pymongo.errors import DuplicateKeyError, PyMongoError
 
@@ -323,4 +322,6 @@ def serve_logo() -> FileResponse:
     return FileResponse(LOGO_FILE, media_type="image/jpeg")
 
 
-app.mount("/", StaticFiles(directory=FRONTEND_DIRECTORY, html=True), name="frontend")
+@app.get("/")
+def api_root() -> dict[str, str]:
+    return {"message": "Certificate API is running.", "docs": "/docs", "health": "/health"}
