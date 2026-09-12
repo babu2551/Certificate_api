@@ -52,7 +52,7 @@ app.add_middleware(
 )
 
 FRONTEND_DIRECTORY = Path(__file__).with_name("frontend")
-LOGO_FILE = Path(__file__).with_name("logo.jpg")
+LOGO_FILE = FRONTEND_DIRECTORY / "logo.jpg"
 security = HTTPBasic()
 ADMIN_USERNAME = os.getenv("ADMIN_USERNAME", "admin")
 ADMIN_PASSWORD = os.getenv("ADMIN_PASSWORD", "admin12345")
