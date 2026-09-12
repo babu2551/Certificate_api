@@ -46,6 +46,7 @@ app.add_middleware(
         "null",
         "https://certificate-api-w6r6.onrender.com",
     ],
+    allow_origin_regex=r"https://.*",
     allow_methods=["GET", "POST", "DELETE"],
     allow_headers=["Content-Type", "Authorization"],
 )
