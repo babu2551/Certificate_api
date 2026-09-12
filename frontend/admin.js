@@ -76,7 +76,6 @@ async function loadDashboard() {
 
 async function signIn(event) {
     event.preventDefault();
-    const dashboardWindow = window.open('about:blank', '_blank');
     const formData = new FormData(loginForm);
     const username = formData.get('username').trim();
     const password = formData.get('password');
@@ -87,14 +86,9 @@ async function signIn(event) {
     try {
         await request('/admin/dashboard');
         sessionStorage.setItem(authStorageKey, adminAuthorization);
-        if (dashboardWindow) {
-            const dashboardUrl = window.location.href.split('?')[0].replace(/admin\.html$/, 'dashboard.html');
-            dashboardWindow.location.href = dashboardUrl;
-        } else {
-            loginError.textContent = 'Allow pop-ups to open the dashboard in a new page.';
-        }
+        const dashboardUrl = window.location.href.split('?')[0].replace(/admin\.html$/, 'dashboard.html');
+        window.location.assign(dashboardUrl);
     } catch (error) {
-        dashboardWindow?.close();
         adminAuthorization = '';
         sessionStorage.removeItem(authStorageKey);
         loginError.textContent = error.message;
