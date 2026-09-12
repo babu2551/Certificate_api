@@ -15,6 +15,10 @@
     box-sizing: border-box
 }
 
+img {
+    max-width: 100%
+}
+
 body {
     margin: 0;
     min-width: 320px;
@@ -741,6 +745,7 @@ dialog::backdrop {
     }
 
     .admin-header {
+        flex-wrap: wrap;
         gap: 18px;
     }
 
@@ -757,6 +762,16 @@ dialog::backdrop {
         flex-direction: column;
         gap: 25px;
         padding: 35px 0
+    }
+
+    .dashboard-heading > div,
+    .panel-heading > div {
+        min-width: 0;
+    }
+
+    .panel-heading {
+        flex-wrap: wrap;
+        gap: 12px;
     }
 
     .stat-grid {
@@ -799,6 +814,7 @@ dialog::backdrop {
     }
 
     .admin-header {
+        align-items: flex-start;
         padding: 20px 0
     }
 
@@ -817,12 +833,21 @@ dialog::backdrop {
         width: min(100% - 24px, 390px)
     }
 
+    .header-actions {
+        width: 100%;
+        justify-content: flex-end;
+    }
+
     .dashboard-heading {
         padding-top: 28px;
     }
 
     .dashboard-heading h1 {
         font-size: clamp(43px, 15vw, 62px);
+    }
+
+    .dashboard-heading p:last-child {
+        max-width: 100%;
     }
 
     .dashboard-heading p:last-child {
@@ -872,6 +897,7 @@ dialog::backdrop {
     }
 
     .panel-heading {
+        align-items: center;
         gap: 12px;
     }
 

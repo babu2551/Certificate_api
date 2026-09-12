@@ -11,7 +11,7 @@ const loginError = document.querySelector('#login-error');
 const loginButton = loginForm?.querySelector('button[type="submit"]');
 const dashboardLoader = document.querySelector('#dashboard-loader');
 const authStorageKey = 'certificate-admin-authorization';
-let adminAuthorization = localStorage.getItem(authStorageKey) || '';
+let adminAuthorization = sessionStorage.getItem(authStorageKey) || '';
 
 function showMessage(text, type = '') {
     message.textContent = text;
@@ -86,7 +86,7 @@ async function signIn(event) {
     if (loginButton) loginButton.disabled = true;
     try {
         await request('/admin/dashboard');
-        localStorage.setItem(authStorageKey, adminAuthorization);
+        sessionStorage.setItem(authStorageKey, adminAuthorization);
         if (dashboardWindow) {
             const dashboardUrl = window.location.href.split('?')[0].replace(/admin\.html$/, 'dashboard.html');
             dashboardWindow.location.href = dashboardUrl;
@@ -96,7 +96,7 @@ async function signIn(event) {
     } catch (error) {
         dashboardWindow?.close();
         adminAuthorization = '';
-        localStorage.removeItem(authStorageKey);
+        sessionStorage.removeItem(authStorageKey);
         loginError.textContent = error.message;
     } finally {
         loginButton?.classList.remove('is-loading');
@@ -115,7 +115,7 @@ async function openSavedDashboard() {
         await loadDashboard();
     } catch (error) {
         adminAuthorization = '';
-        localStorage.removeItem(authStorageKey);
+        sessionStorage.removeItem(authStorageKey);
         window.location.href = 'admin.html';
     }
 }

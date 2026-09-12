@@ -45,8 +45,8 @@ app.add_middleware(
         "http://localhost:5501",
         "http://127.0.0.1:5501",
         "null",
+        "https://certificate-api-w6r6.onrender.com",
     ],
-    allow_origin_regex=r"https://.*",
     allow_methods=["GET", "POST", "DELETE"],
     allow_headers=["Content-Type", "Authorization"],
 )
@@ -54,8 +54,15 @@ app.add_middleware(
 FRONTEND_DIRECTORY = Path(__file__).with_name("frontend")
 LOGO_FILE = FRONTEND_DIRECTORY / "logo.jpg"
 security = HTTPBasic()
-ADMIN_USERNAME = os.getenv("ADMIN_USERNAME", "admin")
-ADMIN_PASSWORD = os.getenv("ADMIN_PASSWORD", "admin12345")
+APP_ENV = os.getenv("APP_ENV", "development").lower()
+ADMIN_USERNAME = os.getenv("ADMIN_USERNAME")
+ADMIN_PASSWORD = os.getenv("ADMIN_PASSWORD")
+
+if APP_ENV == "production" and (not ADMIN_USERNAME or not ADMIN_PASSWORD):
+    raise RuntimeError("ADMIN_USERNAME and ADMIN_PASSWORD must be configured in production.")
+
+ADMIN_USERNAME = ADMIN_USERNAME or "admin"
+ADMIN_PASSWORD = ADMIN_PASSWORD or "admin12345"
 
 
 def verify_admin(credentials: HTTPBasicCredentials = Depends(security)) -> str:

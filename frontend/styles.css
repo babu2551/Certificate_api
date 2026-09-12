@@ -15,6 +15,10 @@
   box-sizing: border-box;
 }
 
+img {
+  max-width: 100%;
+}
+
 body {
   margin: 0;
   min-width: 320px;
@@ -456,6 +460,8 @@ dd {
   }
 
   .site-header {
+    flex-wrap: wrap;
+    gap: 14px;
     padding: 20px 0;
   }
 
@@ -476,6 +482,11 @@ dd {
 
   .header-actions {
     gap: 0;
+    margin-left: auto;
+  }
+
+  .admin-link {
+    white-space: nowrap;
   }
 
   .main-content {
@@ -501,10 +512,12 @@ dd {
   }
 
   .verify-panel {
+    width: 100%;
     padding: 27px 22px;
   }
 
   .site-footer {
+    width: 100%;
     gap: 20px;
     flex-direction: column;
   }
@@ -513,6 +526,15 @@ dd {
 @media (max-width: 430px) {
   .page-shell {
     width: min(100% - 28px, 390px);
+  }
+
+  .site-header {
+    align-items: flex-start;
+  }
+
+  .header-actions {
+    width: 100%;
+    justify-content: flex-end;
   }
 
   .main-content {
