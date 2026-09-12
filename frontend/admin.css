@@ -34,6 +34,41 @@ body:before {
     background-size: 21px 21px
 }
 
+body.is-loading {
+    overflow: hidden
+}
+
+.dashboard-loader {
+    position: fixed;
+    inset: 0;
+    z-index: 10;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    color: var(--ink);
+    background: rgba(248, 250, 252, .82);
+    font-size: 13px;
+    font-weight: 700;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity .2s ease;
+}
+
+.dashboard-loader.is-visible {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+.loader-spinner {
+    width: 22px;
+    height: 22px;
+    border: 3px solid #cbd5e1;
+    border-top-color: var(--blue);
+    border-radius: 50%;
+    animation: spin .7s linear infinite;
+}
+
 .admin-shell {
     width: min(1250px, calc(100% - 72px));
     max-width: 100%;
@@ -494,6 +529,25 @@ body:before {
 .action-button:disabled {
     opacity: .5;
     cursor: wait
+}
+
+.action-button.is-loading {
+    justify-content: center;
+    gap: 10px;
+}
+
+.action-button.is-loading::before {
+    width: 14px;
+    height: 14px;
+    content: "";
+    border: 2px solid currentColor;
+    border-right-color: transparent;
+    border-radius: 50%;
+    animation: spin .7s linear infinite;
+}
+
+.action-button.is-loading > span:last-child {
+    display: none;
 }
 
 .outline-button {

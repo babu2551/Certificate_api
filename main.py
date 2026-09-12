@@ -7,7 +7,7 @@ from io import StringIO
 
 from fastapi import Depends, FastAPI, File, HTTPException, UploadFile, status
 from fastapi.security import HTTPBasic, HTTPBasicCredentials
-from fastapi.responses import JSONResponse, StreamingResponse
+from fastapi.responses import FileResponse, JSONResponse, StreamingResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.middleware.cors import CORSMiddleware
 from pymongo.errors import DuplicateKeyError, PyMongoError
@@ -52,6 +52,7 @@ app.add_middleware(
 )
 
 FRONTEND_DIRECTORY = Path(__file__).with_name("frontend")
+LOGO_FILE = Path(__file__).with_name("logo.jpg")
 security = HTTPBasic()
 ADMIN_USERNAME = os.getenv("ADMIN_USERNAME", "admin")
 ADMIN_PASSWORD = os.getenv("ADMIN_PASSWORD", "admin12345")
@@ -308,6 +309,11 @@ async def upload_registrations(
     except (UnicodeDecodeError, PyMongoError):
         raise HTTPException(status_code=400, detail="The CSV could not be imported.")
     return {"message": f"Imported {imported} registration(s).", "imported": imported}
+
+
+@app.get("/logo.jpg", include_in_schema=False)
+def serve_logo() -> FileResponse:
+    return FileResponse(LOGO_FILE, media_type="image/jpeg")
 
 
 app.mount("/", StaticFiles(directory=FRONTEND_DIRECTORY, html=True), name="frontend")

@@ -8,12 +8,19 @@ const loginScreen = document.querySelector('#login-screen');
 const dashboardContent = document.querySelector('#dashboard-content');
 const loginForm = document.querySelector('#login-form');
 const loginError = document.querySelector('#login-error');
+const loginButton = loginForm?.querySelector('button[type="submit"]');
+const dashboardLoader = document.querySelector('#dashboard-loader');
 const authStorageKey = 'certificate-admin-authorization';
 let adminAuthorization = localStorage.getItem(authStorageKey) || '';
 
 function showMessage(text, type = '') {
     message.textContent = text;
     message.className = `admin-message ${type}`;
+}
+
+function setDashboardLoading(isLoading) {
+    dashboardLoader?.classList.toggle('is-visible', isLoading);
+    document.body.classList.toggle('is-loading', isLoading);
 }
 
 async function request(path, options = {}) {
@@ -51,6 +58,7 @@ function renderRegistrations(rows) {
 function escapeHtml(value = '') { const node = document.createElement('span'); node.textContent = value; return node.innerHTML; }
 
 async function loadDashboard() {
+    setDashboardLoading(true);
     try {
         const data = await request('/admin/dashboard');
         const { stats } = data;
@@ -63,6 +71,7 @@ async function loadDashboard() {
         renderRegistrations(data.recent_registrations);
         showMessage(`Last synced ${new Intl.DateTimeFormat(undefined, { hour: 'numeric', minute: '2-digit' }).format(new Date())}`, 'success');
     } catch (error) { showMessage(error.message, 'error'); }
+    finally { setDashboardLoading(false); }
 }
 
 async function signIn(event) {
@@ -73,6 +82,8 @@ async function signIn(event) {
     const password = formData.get('password');
     adminAuthorization = `Basic ${btoa(`${username}:${password}`)}`;
     loginError.textContent = '';
+    loginButton?.classList.add('is-loading');
+    if (loginButton) loginButton.disabled = true;
     try {
         await request('/admin/dashboard');
         localStorage.setItem(authStorageKey, adminAuthorization);
@@ -87,6 +98,9 @@ async function signIn(event) {
         adminAuthorization = '';
         localStorage.removeItem(authStorageKey);
         loginError.textContent = error.message;
+    } finally {
+        loginButton?.classList.remove('is-loading');
+        if (loginButton) loginButton.disabled = false;
     }
 }
 
